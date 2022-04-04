@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>計算複利</title>
+</head>
+<body>
+    <div>
+        <label for="amount">每月投入:</label>
+        <input type="number" id="amount" value="0">
+    </div>
+    <div>
+        <label for="yearsRange">連續幾年:</label>
+        <input type="number" id="yearsRange" value="0">
+    </div>
+    <div>
+        <label for="amountYield">殖利率幾%:</label>
+        <input type="number" id="amountYield" value="0">
+    </div>
+    <button onclick="submit()">計算</button>
+    <h1 id="yield"></h1>
+</body>
+<script>
+    // 提交
+    function submit(){
+        const elAmount = document.getElementById('amount')
+        const elYearsRange = document.getElementById('yearsRange')
+        const elAmountYield = document.getElementById('amountYield')
+        const amount = Number(elAmount.value)
+        const yearsRange = Number(elYearsRange.value)
+        const amountYield = Number(elAmountYield.value) / 100
+
+        const result = calculate(amount,yearsRange,amountYield)
+        const elYield = document.getElementById('yield')
+        elYield.innerText = `金額: ${result.toFixed(2)}`
+    }
+    /**
+     * 計算複利
+     * amount 每月投入金額
+     * yearsRange 連續幾年
+     * amountYield 殖利率
+     * currentYear 當前跑到哪一年了
+     * money 累積多少錢
+     * 
+    */
+    function calculate(amount=5000,yearsRange = 10,amountYield = 0.05,currentYear = 1,money = 0){
+        let amountYear = amount*12 +  money// 本年度所投入的金額
+        let total = amountYear+ amountYear*amountYield  // 目前所累積的錢
+        const nextYear = currentYear + 1 // 下一年
+        if(nextYear > yearsRange) return total
+        return calculate(amount,yearsRange,amountYield,nextYear,total)
+    }
+    (function(){
+        window.addEventListener('keyup',(e)=>{
+            if(e.key === 'Enter') submit()
+        })
+    })();
+</script>
+</html>
